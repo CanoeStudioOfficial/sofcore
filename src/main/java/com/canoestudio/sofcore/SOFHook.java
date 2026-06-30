@@ -1,4 +1,4 @@
-package com.canoestudio.dwdccore;
+package com.canoestudio.sofcore;
 
 import com.google.common.collect.BiMap;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -23,8 +23,8 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-@Mod.EventBusSubscriber(modid = DWDCcore.MOD_ID)
-public class DWDCHooks {
+@Mod.EventBusSubscriber(modid = SOFcore.MOD_ID)
+public class SOFHook {
 
     // --- Fast Fly Break Logic ---
     @SubscribeEvent

@@ -1,8 +1,8 @@
-package com.canoestudio.dwdccore;
+package com.canoestudio.sofcore;
 
-import com.canoestudio.dwdccore.proxy.CommonProxy;
+import com.canoestudio.sofcore.proxy.CommonProxy;
 
-import net.minecraftforge.common.util.PacketUtil;
+
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -12,12 +12,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @Mod(modid = Tags.MOD_ID, name = Tags.MOD_NAME, version = Tags.VERSION)
-public class DWDCcore {
+public class SOFcore {
 
     public static final Logger LOGGER = LogManager.getLogger(Tags.MOD_NAME);
     public static final String MOD_ID = Tags.MOD_ID;
 
-    @SidedProxy(clientSide = "com.canoestudio.dwdccore.proxy.ClientProxy", serverSide = "com.canoestudio.dwdccore.proxy.CommonProxy")
+    @SidedProxy(clientSide = "com.canoestudio.sofcore.proxy.ClientProxy", serverSide = "com.canoestudio.sofcore.proxy.CommonProxy")
     public static CommonProxy proxy;
 
 
