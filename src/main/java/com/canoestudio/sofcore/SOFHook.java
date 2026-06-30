@@ -3,9 +3,14 @@ package com.canoestudio.sofcore;
 import com.google.common.collect.BiMap;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.ScreenshotEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -25,6 +30,24 @@ import java.io.IOException;
 
 @Mod.EventBusSubscriber(modid = SOFcore.MOD_ID)
 public class SOFHook {
+
+    @SubscribeEvent
+    public static void onPlayerLoggedIn(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
+        if (!SOFConfig.joinWarning.enabled || event.player.world.isRemote) {
+            return;
+        }
+
+        TextComponentTranslation message = new TextComponentTranslation(SOFConfig.joinWarning.stage.getLangKey());
+        message.getStyle().setColor(TextFormatting.RED).setBold(true);
+        event.player.sendMessage(message);
+    }
+
+    @SubscribeEvent
+    public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (SOFcore.MOD_ID.equals(event.getModID())) {
+            ConfigManager.sync(SOFcore.MOD_ID, Config.Type.INSTANCE);
+        }
+    }
 
     // --- Fast Fly Break Logic ---
     @SubscribeEvent
