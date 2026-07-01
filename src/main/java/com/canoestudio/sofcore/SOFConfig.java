@@ -11,6 +11,11 @@ public class SOFConfig {
     @Config.Comment("Controls the warning sent to players when they join a world/server.")
     public static JoinWarning joinWarning = new JoinWarning();
 
+    @Config.Name("dynamic_trees")
+    @Config.LangKey("sofcore.config.dynamic_trees")
+    @Config.Comment("Compatibility fixes for Dynamic Trees.")
+    public static DynamicTrees dynamicTrees = new DynamicTrees();
+
     public static class JoinWarning {
 
         @Config.Name("enabled")
@@ -22,6 +27,14 @@ public class SOFConfig {
         @Config.LangKey("sofcore.config.join_warning.stage")
         @Config.Comment("Select which warning text should be sent.")
         public PackStage stage = PackStage.SNAPSHOT;
+    }
+
+    public static class DynamicTrees {
+
+        @Config.Name("fix_explosion_root_decay")
+        @Config.LangKey("sofcore.config.dynamic_trees.fix_explosion_root_decay")
+        @Config.Comment("When Dynamic Trees are destroyed by explosions, force their rooty dirt to decay after the explosion finishes.")
+        public boolean fixExplosionRootDecay = true;
     }
 
     public enum PackStage {

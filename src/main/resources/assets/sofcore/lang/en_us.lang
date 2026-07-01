@@ -5,3 +5,5 @@ sofcore.config.title=SOF Core
 sofcore.config.join_warning=Join Warning
 sofcore.config.join_warning.enabled=Enable Join Warning
 sofcore.config.join_warning.stage=Warning Version Stage
+sofcore.config.dynamic_trees=Dynamic Trees Compatibility
+sofcore.config.dynamic_trees.fix_explosion_root_decay=Fix Explosion Rooty Dirt Leftovers

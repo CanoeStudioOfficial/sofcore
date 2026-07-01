@@ -5,3 +5,5 @@ sofcore.config.title=SOF Core
 sofcore.config.join_warning=进服提示
 sofcore.config.join_warning.enabled=启用进服提示
 sofcore.config.join_warning.stage=提示版本阶段
+sofcore.config.dynamic_trees=动态树兼容
+sofcore.config.dynamic_trees.fix_explosion_root_decay=修复爆炸根土残留

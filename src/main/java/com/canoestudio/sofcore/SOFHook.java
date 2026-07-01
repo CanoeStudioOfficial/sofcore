@@ -1,15 +1,19 @@
 package com.canoestudio.sofcore;
 
+import com.canoestudio.sofcore.compat.DynamicTreesCompat;
+import com.canoestudio.sofcore.compat.DynamicTreesCompat.RootDecay;
 import com.google.common.collect.BiMap;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.ScreenshotEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -17,6 +21,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -27,9 +32,15 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @Mod.EventBusSubscriber(modid = SOFcore.MOD_ID)
 public class SOFHook {
+
+    private static final Map<Integer, Set<RootDecay>> PENDING_DYNAMIC_TREE_ROOT_DECAYS = new HashMap<>();
 
     @SubscribeEvent
     public static void onPlayerLoggedIn(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
@@ -46,6 +57,44 @@ public class SOFHook {
     public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (SOFcore.MOD_ID.equals(event.getModID())) {
             ConfigManager.sync(SOFcore.MOD_ID, Config.Type.INSTANCE);
+            if (!SOFConfig.dynamicTrees.fixExplosionRootDecay) {
+                PENDING_DYNAMIC_TREE_ROOT_DECAYS.clear();
+            }
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onExplosionDetonate(ExplosionEvent.Detonate event) {
+        World world = event.getWorld();
+        if (!SOFConfig.dynamicTrees.fixExplosionRootDecay || world.isRemote) {
+            return;
+        }
+
+        Set<RootDecay> roots = DynamicTreesCompat.collectExplosionRoots(world, event.getAffectedBlocks());
+        if (roots.isEmpty()) {
+            return;
+        }
+
+        int dimension = world.provider.getDimension();
+        Set<RootDecay> pendingRoots = PENDING_DYNAMIC_TREE_ROOT_DECAYS.computeIfAbsent(dimension, key -> new HashSet<>());
+        pendingRoots.addAll(roots);
+    }
+
+    @SubscribeEvent
+    public static void onWorldTick(TickEvent.WorldTickEvent event) {
+        if (event.side != Side.SERVER || event.phase != TickEvent.Phase.END) {
+            return;
+        }
+
+        if (!SOFConfig.dynamicTrees.fixExplosionRootDecay) {
+            PENDING_DYNAMIC_TREE_ROOT_DECAYS.clear();
+            return;
+        }
+
+        World world = event.world;
+        Set<RootDecay> roots = PENDING_DYNAMIC_TREE_ROOT_DECAYS.remove(world.provider.getDimension());
+        if (roots != null) {
+            DynamicTreesCompat.decayRoots(world, roots);
         }
     }
 
