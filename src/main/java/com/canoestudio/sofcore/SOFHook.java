@@ -1,10 +1,10 @@
 package com.canoestudio.sofcore;
 
 import com.canoestudio.sofcore.compat.DynamicTreesCompat;
-import com.canoestudio.sofcore.compat.DynamicTreesCompat.RootDecay;
 import com.google.common.collect.BiMap;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -40,7 +40,7 @@ import java.util.Set;
 @Mod.EventBusSubscriber(modid = SOFcore.MOD_ID)
 public class SOFHook {
 
-    private static final Map<Integer, Set<RootDecay>> PENDING_DYNAMIC_TREE_ROOT_DECAYS = new HashMap<>();
+    private static final Map<Integer, Set<BlockPos>> PENDING_DYNAMIC_TREE_ROOT_DESTRUCTIONS = new HashMap<>();
 
     @SubscribeEvent
     public static void onPlayerLoggedIn(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
@@ -57,8 +57,8 @@ public class SOFHook {
     public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (SOFcore.MOD_ID.equals(event.getModID())) {
             ConfigManager.sync(SOFcore.MOD_ID, Config.Type.INSTANCE);
-            if (!SOFConfig.dynamicTrees.fixExplosionRootDecay) {
-                PENDING_DYNAMIC_TREE_ROOT_DECAYS.clear();
+            if (!SOFConfig.dynamicTrees.destroyExplosionRoots) {
+                PENDING_DYNAMIC_TREE_ROOT_DESTRUCTIONS.clear();
             }
         }
     }
@@ -66,17 +66,17 @@ public class SOFHook {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onExplosionDetonate(ExplosionEvent.Detonate event) {
         World world = event.getWorld();
-        if (!SOFConfig.dynamicTrees.fixExplosionRootDecay || world.isRemote) {
+        if (!SOFConfig.dynamicTrees.destroyExplosionRoots || world.isRemote) {
             return;
         }
 
-        Set<RootDecay> roots = DynamicTreesCompat.collectExplosionRoots(world, event.getAffectedBlocks());
+        Set<BlockPos> roots = DynamicTreesCompat.collectExplosionRoots(world, event.getAffectedBlocks());
         if (roots.isEmpty()) {
             return;
         }
 
         int dimension = world.provider.getDimension();
-        Set<RootDecay> pendingRoots = PENDING_DYNAMIC_TREE_ROOT_DECAYS.computeIfAbsent(dimension, key -> new HashSet<>());
+        Set<BlockPos> pendingRoots = PENDING_DYNAMIC_TREE_ROOT_DESTRUCTIONS.computeIfAbsent(dimension, key -> new HashSet<>());
         pendingRoots.addAll(roots);
     }
 
@@ -86,15 +86,15 @@ public class SOFHook {
             return;
         }
 
-        if (!SOFConfig.dynamicTrees.fixExplosionRootDecay) {
-            PENDING_DYNAMIC_TREE_ROOT_DECAYS.clear();
+        if (!SOFConfig.dynamicTrees.destroyExplosionRoots) {
+            PENDING_DYNAMIC_TREE_ROOT_DESTRUCTIONS.clear();
             return;
         }
 
         World world = event.world;
-        Set<RootDecay> roots = PENDING_DYNAMIC_TREE_ROOT_DECAYS.remove(world.provider.getDimension());
+        Set<BlockPos> roots = PENDING_DYNAMIC_TREE_ROOT_DESTRUCTIONS.remove(world.provider.getDimension());
         if (roots != null) {
-            DynamicTreesCompat.decayRoots(world, roots);
+            DynamicTreesCompat.destroyRoots(world, roots);
         }
     }
 

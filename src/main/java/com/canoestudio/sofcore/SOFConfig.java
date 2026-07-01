@@ -31,10 +31,10 @@ public class SOFConfig {
 
     public static class DynamicTrees {
 
-        @Config.Name("fix_explosion_root_decay")
-        @Config.LangKey("sofcore.config.dynamic_trees.fix_explosion_root_decay")
-        @Config.Comment("When Dynamic Trees are destroyed by explosions, force their rooty dirt to decay after the explosion finishes.")
-        public boolean fixExplosionRootDecay = true;
+        @Config.Name("destroy_explosion_roots")
+        @Config.LangKey("sofcore.config.dynamic_trees.destroy_explosion_roots")
+        @Config.Comment("When Dynamic Trees are destroyed by explosions, remove their rooty dirt after the explosion finishes.")
+        public boolean destroyExplosionRoots = true;
     }
 
     public enum PackStage {
