@@ -16,6 +16,11 @@ public class SOFConfig {
     @Config.Comment("Compatibility fixes for Dynamic Trees.")
     public static DynamicTrees dynamicTrees = new DynamicTrees();
 
+    @Config.Name("waystones_to_xaero")
+    @Config.LangKey("sofcore.config.waystones_to_xaero")
+    @Config.Comment("Automatically creates Xaero's Minimap waypoints when Waystones are activated.")
+    public static WaystonesToXaero waystonesToXaero = new WaystonesToXaero();
+
     public static class JoinWarning {
 
         @Config.Name("enabled")
@@ -35,6 +40,19 @@ public class SOFConfig {
         @Config.LangKey("sofcore.config.dynamic_trees.destroy_explosion_roots")
         @Config.Comment("When Dynamic Trees are destroyed by explosions, remove their rooty dirt after the explosion finishes.")
         public boolean destroyExplosionRoots = true;
+    }
+
+    public static class WaystonesToXaero {
+
+        @Config.Name("enabled")
+        @Config.LangKey("sofcore.config.waystones_to_xaero.enabled")
+        @Config.Comment("Set to true to create Xaero waypoints when right-clicking Waystones.")
+        public boolean enabled = true;
+
+        @Config.Name("prevent_duplicates")
+        @Config.LangKey("sofcore.config.waystones_to_xaero.prevent_duplicates")
+        @Config.Comment("Set to true to skip creating a waypoint if the current Xaero waypoint set already has one with the same name and position.")
+        public boolean preventDuplicates = true;
     }
 
     public enum PackStage {

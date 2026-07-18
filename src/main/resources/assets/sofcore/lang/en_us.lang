@@ -7,3 +7,6 @@ sofcore.config.join_warning.enabled=Enable Join Warning
 sofcore.config.join_warning.stage=Warning Version Stage
 sofcore.config.dynamic_trees=Dynamic Trees Compatibility
 sofcore.config.dynamic_trees.destroy_explosion_roots=Remove Rooty Dirt After Explosions
+sofcore.config.waystones_to_xaero=Waystones to Xaero
+sofcore.config.waystones_to_xaero.enabled=Enable Waystones to Xaero
+sofcore.config.waystones_to_xaero.prevent_duplicates=Prevent Duplicate Waypoints
