@@ -14,11 +14,7 @@ sofcore.config.monster_currency_drops=怪物货币掉落
 sofcore.config.monster_currency_drops.enabled=启用怪物货币掉落
 sofcore.config.monster_currency_drops.require_player_kill=需要玩家击杀
 sofcore.config.monster_currency_drops.drop_chance=掉落概率
-sofcore.config.monster_currency_drops.base_amount=基础金额
-sofcore.config.monster_currency_drops.amount_per_level=每级金额
-sofcore.config.monster_currency_drops.max_amount=最大金额
-sofcore.config.monster_currency_drops.level_nbt_keys=等级 NBT 键名
-sofcore.config.monster_currency_drops.fallback_health_per_level=生命值换算等级
+sofcore.config.monster_currency_drops.mob_division_value=怪物血量除数
 
 item.sofcore.currency_1.name=Θ 1
 item.sofcore.currency_5.name=Θ 5

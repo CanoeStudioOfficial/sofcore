@@ -14,11 +14,7 @@ sofcore.config.monster_currency_drops=Monster Currency Drops
 sofcore.config.monster_currency_drops.enabled=Enable Monster Currency Drops
 sofcore.config.monster_currency_drops.require_player_kill=Require Player Kill
 sofcore.config.monster_currency_drops.drop_chance=Drop Chance
-sofcore.config.monster_currency_drops.base_amount=Base Amount
-sofcore.config.monster_currency_drops.amount_per_level=Amount Per Level
-sofcore.config.monster_currency_drops.max_amount=Max Amount
-sofcore.config.monster_currency_drops.level_nbt_keys=Level NBT Keys
-sofcore.config.monster_currency_drops.fallback_health_per_level=Fallback Health Per Level
+sofcore.config.monster_currency_drops.mob_division_value=Mob Division Value
 
 item.sofcore.currency_1.name=Θ 1
 item.sofcore.currency_5.name=Θ 5

@@ -11,10 +11,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -68,53 +66,8 @@ public final class MonsterCurrencyDrops {
     }
 
     private static int calculateAmount(EntityLivingBase entity, SOFConfig.MonsterCurrencyDrops config) {
-        int level = resolveLevel(entity, config);
-        double amount = config.baseAmount + (level * config.amountPerLevel);
-
-        if (config.maxAmount > 0.0D) {
-            amount = Math.min(amount, config.maxAmount);
-        }
-
+        double amount = entity.getMaxHealth() / config.mobDivisionValue;
         return Math.max(0, (int) Math.floor(amount));
-    }
-
-    private static int resolveLevel(EntityLivingBase entity, SOFConfig.MonsterCurrencyDrops config) {
-        int forgeDataLevel = readLevel(entity.getEntityData(), config, entity.getName());
-        if (forgeDataLevel > 0) {
-            return forgeDataLevel;
-        }
-
-        NBTTagCompound entityNbt = new NBTTagCompound();
-        entity.writeToNBT(entityNbt);
-        int fullNbtLevel = readLevel(entityNbt, config, entity.getName());
-        if (fullNbtLevel > 0) {
-            return fullNbtLevel;
-        }
-
-        return Math.max(1, (int) Math.ceil(entity.getMaxHealth() / config.fallbackHealthPerLevel));
-    }
-
-    private static int readLevel(NBTTagCompound entityData, SOFConfig.MonsterCurrencyDrops config, String entityName) {
-        for (String key : config.levelNbtKeys) {
-            if (key == null || key.trim().isEmpty()) {
-                continue;
-            }
-
-            String trimmedKey = key.trim();
-            if (entityData.hasKey(trimmedKey, Constants.NBT.TAG_ANY_NUMERIC)) {
-                return Math.max(1, entityData.getInteger(trimmedKey));
-            }
-
-            if (entityData.hasKey(trimmedKey, Constants.NBT.TAG_STRING)) {
-                try {
-                    return Math.max(1, Integer.parseInt(entityData.getString(trimmedKey)));
-                } catch (NumberFormatException ignored) {
-                    SOFcore.LOGGER.debug("Monster level NBT key [{}] was not numeric on {}.", trimmedKey, entityName);
-                }
-            }
-        }
-
-        return 0;
     }
 
     private static void dropCurrencyAmount(World world, double x, double y, double z, int amount) {

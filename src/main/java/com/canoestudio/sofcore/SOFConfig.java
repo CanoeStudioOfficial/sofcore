@@ -23,7 +23,7 @@ public class SOFConfig {
 
     @Config.Name("monster_currency_drops")
     @Config.LangKey("sofcore.config.monster_currency_drops")
-    @Config.Comment("Drops SOF Core currency items from monsters based on their level.")
+    @Config.Comment("Drops SOF Core currency items from monsters based on their max health.")
     public static MonsterCurrencyDrops monsterCurrencyDrops = new MonsterCurrencyDrops();
 
     public static class JoinWarning {
@@ -78,35 +78,11 @@ public class SOFConfig {
         @Config.Comment("Chance for a killed monster to drop currency. 1.0 means always drop.")
         public double dropChance = 1.0D;
 
-        @Config.Name("base_amount")
-        @Config.LangKey("sofcore.config.monster_currency_drops.base_amount")
-        @Config.RangeDouble(min = 0.0D)
-        @Config.Comment("Flat amount added to every currency drop.")
-        public double baseAmount = 0.0D;
-
-        @Config.Name("amount_per_level")
-        @Config.LangKey("sofcore.config.monster_currency_drops.amount_per_level")
-        @Config.RangeDouble(min = 0.0D)
-        @Config.Comment("Currency amount dropped per monster level.")
-        public double amountPerLevel = 1.0D;
-
-        @Config.Name("max_amount")
-        @Config.LangKey("sofcore.config.monster_currency_drops.max_amount")
-        @Config.RangeDouble(min = 0.0D)
-        @Config.Comment("Maximum currency amount per drop. Set to 0 for no cap.")
-        public double maxAmount = 0.0D;
-
-        @Config.Name("level_nbt_keys")
-        @Config.LangKey("sofcore.config.monster_currency_drops.level_nbt_keys")
-        @Config.Comment("Entity data keys checked for monster level before falling back to max health.")
-        public String[] levelNbtKeys = new String[] { "Level", "level", "MobLevel", "mobLevel", "monsterLevel" };
-
-        @Config.Name("fallback_health_per_level")
-        @Config.LangKey("sofcore.config.monster_currency_drops.fallback_health_per_level")
+        @Config.Name("mob_division_value")
+        @Config.LangKey("sofcore.config.monster_currency_drops.mob_division_value")
         @Config.RangeDouble(min = 1.0D)
-        @Config.Comment("If no level NBT key exists, level is estimated from max health divided by this value.")
-        public double fallbackHealthPerLevel = 20.0D;
-
+        @Config.Comment("Currency amount is calculated as mob max health divided by this value.")
+        public double mobDivisionValue = 1.0D;
     }
 
     public enum PackStage {
